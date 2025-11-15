@@ -1,57 +1,56 @@
-# React + TypeScript + Vite
+# Neon Sound Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A neon‑style audio visualizer built with React, TypeScript, Canvas, and the WebAudio API. It renders glowing frequency bars, a cyan waveform, and particle bursts on beats. Supports both microphone input and (browser‑dependent) system/tab audio capture.
 
-Currently, two official plugins are available:
+## Features
+- Real‑time frequency analysis (bass/mid/treble)
+- Neon gradient bars with glow
+- Glowing waveform line
+- Particle bursts on beat detection
+- Microphone and system/tab audio capture modes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Requirements
+- Node.js 18+
+- Modern browser; Chrome recommended for tab/system audio on macOS
 
-## Expanding the ESLint configuration
+## Quick Start
+- Install dependencies: `npm install`
+- Start dev server: `npm run dev` and open `http://localhost:5173/`
+- Build production: `npm run build`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Usage
+- Click `Use Microphone` to visualize mic input.
+- Click `Use System Audio` to capture audio while sharing:
+  - In Chrome, select a browser tab and enable “Share tab audio”. Window/screen selections may not provide audio.
+  - If you see `NotSupportedError`, try Chrome, share a tab, and enable audio.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Troubleshooting
+- `Error accessing system audio: NotSupportedError`: Browser or selection doesn’t support system audio.
+  - Use Chrome on macOS, choose a browser tab, and enable “Share tab audio”.
+- Visuals too jittery or too calm: tune smoothing constants below.
+- No movement: ensure permissions were granted and an audio source is playing.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Tuning & Configuration
+You can adjust responsiveness and beat detection in `src/components/NeonSoundVisualizer.tsx`.
+- Analyser smoothing: `smoothingTimeConstant` at `src/components/NeonSoundVisualizer.tsx:49` and `src/components/NeonSoundVisualizer.tsx:89`.
+- Bar smoothing/clamping: `drawBars` at `src/components/NeonSoundVisualizer.tsx:150-166`.
+- Waveform smoothing/clamping: `drawWaveform` at `src/components/NeonSoundVisualizer.tsx:176-201`.
+- Beat detection EMA/threshold/cooldown: `analyzeAudio` at `src/components/NeonSoundVisualizer.tsx:229-244`.
+- Particle burst intensity: `animate` at `src/components/NeonSoundVisualizer.tsx:262-271` and velocity in `createParticle` at `src/components/NeonSoundVisualizer.tsx:129-136`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
+- `npm run dev` – start Vite dev server
+- `npm run build` – production build
 
-export default tseslint.config({
-  extends: [
-    // other configs...
-    // Enable lint rules for React
-    reactX.configs['recommended-typescript'],
-    // Enable lint rules for React DOM
-    reactDom.configs.recommended,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Project Structure
+- `src/App.tsx` – mounts the visualizer
+- `src/components/NeonSoundVisualizer.tsx` – main visualizer (canvas + audio)
+- `index.html` – app entry
+
+## Notes on Styling
+The component uses utility class names designed for Tailwind. If Tailwind CSS is not configured, the canvas visualization still works but UI styles may be minimal. Tailwind setup is optional.
+
+## Permissions
+- Microphone: required for mic mode
+- Screen/Tab sharing: required for system/tab audio mode (audio must be explicitly enabled in the picker)
+
