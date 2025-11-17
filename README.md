@@ -53,4 +53,3 @@ The component uses utility class names designed for Tailwind. If Tailwind CSS is
 ## Permissions
 - Microphone: required for mic mode
 - Screen/Tab sharing: required for system/tab audio mode (audio must be explicitly enabled in the picker)
-
